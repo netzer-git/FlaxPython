@@ -13,7 +13,7 @@ from automaticRunner import AutomaticRunner
 
 STARTING_HAND_SIZE = 3
 STAR = "*** *** ***"
-ALIGN = 20
+ALIGN = 25
 
 
 class Player:

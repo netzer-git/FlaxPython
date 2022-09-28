@@ -5,6 +5,36 @@ import colorama
 
 DEBUG_MODE = True
 
+EASY_TEST_DECK = {
+    "red_deck": [factory.get_card_by_id(0),
+                 factory.get_card_by_id(0),
+                 factory.get_card_by_id(0),
+                 factory.get_card_by_id(1),
+                 factory.get_card_by_id(1)],
+    "blue_deck": [factory.get_card_by_id(0),
+                  factory.get_card_by_id(0),
+                  factory.get_card_by_id(0),
+                  factory.get_card_by_id(1),
+                  factory.get_card_by_id(1)]
+}
+
+FLASH_TEST_DECK = {
+    "red_deck": [factory.get_card_by_id(0),
+                 factory.get_card_by_id(0),
+                 factory.get_card_by_id(0),
+                 factory.get_card_by_id(1),
+                 factory.get_card_by_id(1),
+                 factory.get_card_by_id(2),
+                 factory.get_card_by_id(2)],
+    "blue_deck": [factory.get_card_by_id(0),
+                  factory.get_card_by_id(0),
+                  factory.get_card_by_id(0),
+                  factory.get_card_by_id(1),
+                  factory.get_card_by_id(1),
+                  factory.get_card_by_id(2),
+                  factory.get_card_by_id(2)]
+}
+
 
 def main():
     # logging mode
@@ -19,20 +49,11 @@ def main():
     colorama.init(autoreset=True)
 
     # deck init
-    red_deck = [factory.get_card_by_id(0),
-                factory.get_card_by_id(0),
-                factory.get_card_by_id(0),
-                factory.get_card_by_id(1),
-                factory.get_card_by_id(1)]
-    blue_deck = [factory.get_card_by_id(0),
-                 factory.get_card_by_id(0),
-                 factory.get_card_by_id(0),
-                 factory.get_card_by_id(1),
-                 factory.get_card_by_id(1)]
+    decks = FLASH_TEST_DECK
     # area init
     areas = []
     # init game
-    game.Game.instance().init_game(red_deck, blue_deck, areas)
+    game.Game.instance().init_game(decks["red_deck"], decks["blue_deck"], areas)
     # run game
     game.Game.instance().run_game()
     # finish game

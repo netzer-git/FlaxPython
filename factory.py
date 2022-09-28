@@ -7,8 +7,11 @@ from specialFunctions import CardFunctions
 from specialFunctions import AreaFunctions
 
 card_factory = {
-    0: card.Card(0, "John Doe", 1, 1, triggerType.CardTriggerType.EMPTY, None, ""),
-    1: card.Card(1, "Marry Doe", 2, 2, triggerType.CardTriggerType.EMPTY, None, "")
+    0: card.Card(0, "John Doe", 2, 1, triggerType.CardTriggerType.EMPTY, None, ""),
+    1: card.Card(1, "Marry Doe", 3, 2, triggerType.CardTriggerType.EMPTY, None, ""),
+    2: card.Card(2, "The Flash", 1, 1, triggerType.CardTriggerType.ON_REVEAL,
+                 CardFunctions.flash,
+                 CardFunctions.flash.__doc__)
 }
 
 area_factory = {

@@ -22,10 +22,14 @@ class Game:
         self._areas: List[area.Area] = []
         self._game_finish: int = 6
 
-        self._red_player: player.Player = None
-        self._blue_player: player.Player = None
+        self.red_player: player.Player = None
+        self.blue_player: player.Player = None
         self._red_card_queue = []
         self._blue_card_queue = []
+
+        # used only in revealing stage - creating metadata for cards special function
+        self.current_revealing_player: pc.PlayerColor = None
+        self.current_revealing_area: int = None
 
     def get_current_turn_energy(self) -> int:
         # TODO: change with area changes
@@ -73,9 +77,16 @@ class Game:
 
     def play_all_cards_in_queue(self, player_color: pc.PlayerColor):
         player_queue = self._red_card_queue if player_color == pc.PlayerColor.RED else self._blue_card_queue
+        self.current_revealing_player = player_color  # card metadata
         for c in player_queue:
             self._areas[c[1] - 1].add_card_to_side(c[0], player_color)
             logging.debug(f'(B01) card: {c[0].get_id()} was added to area {c[1]} for player {player_color}')
+            if c[0].get_trigger_type() == triggerType.CardTriggerType.ON_REVEAL:
+                self.current_revealing_area = c[1] - 1  # card metadata
+                c[0].activate_special_func()
+                logging.debug(f'(E02) card: {c[0].get_id()} activated ON_REVEAL: {c[0].get_special_func_str()}')
+                self.current_revealing_area = None  # clear card metadata
+        self.current_revealing_player = None  # clear card metadata
 
     def init_game(self, red_deck: List[card.Card], blue_deck: List[card.Card], areas: List[area.Area] = None):
         logging.info('init game')
@@ -84,10 +95,10 @@ class Game:
                                            factory.get_area_by_id(0),
                                            factory.get_area_by_id(0)]
         logging.debug('init players')
-        self._red_player = player.Player(red_deck, pc.PlayerColor.RED)
-        logging.debug(f'red player: {self._red_player}')
-        self._blue_player = player.Player(blue_deck, pc.PlayerColor.BLUE)
-        logging.debug(f'blue player: {self._blue_player}')
+        self.red_player = player.Player(red_deck, pc.PlayerColor.RED)
+        logging.debug(f'red player: {self.red_player}')
+        self.blue_player = player.Player(blue_deck, pc.PlayerColor.BLUE)
+        logging.debug(f'blue player: {self.blue_player}')
 
     def end_game(self) -> pc.PlayerColor:
         """
@@ -112,10 +123,10 @@ class Game:
         logging.info(f'start turn {self._turn_num}')
         print(DASH)
         print(Fore.RED + "Red Player Turn: " + Fore.RESET)
-        self._red_player.do_turn()
+        self.red_player.do_turn()
         print(DASH)
         print(Fore.BLUE + "Blue Player Turn: " + Fore.RESET)
-        self._blue_player.do_turn()
+        self.blue_player.do_turn()
         print(DASH)
 
         logging.debug(f'(B02) conclude turn {self._turn_num}')

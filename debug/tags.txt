@@ -12,6 +12,7 @@
 
 (E01) - Player::draw_card - card ability activation - ON_DRAW
 (E02) - Player::init - card ability activation - ON_START
+(E03) - Game::play_all_cards_in_queue - card ability activation - ON_REVEAL
 
 (F01) - Game::roll_new_area - area ability activation - ON_REVEAL
 (F02) -  - area ability activation - ON_GOING

@@ -1,11 +1,12 @@
 from typing import List
 
 import playerColor
+import factory
 
-SCRIPT_RUNNER_MODE = True
+SCRIPT_RUNNER_MODE = False
 AUTOMATIC_RUNNER_MODE = False
 
-easy_test_input = [
+EASY_TEST_INPUT = [
     ["red1", "y", "0", "1", "n"],
     ["blue1", "y", "0", "2", "n"],
     ["red2", "y", "1", "1", "n"],
@@ -26,7 +27,7 @@ class AutomaticRunner:
     inside_turn: int = 0
     turn_logger: playerColor.PlayerColor = playerColor.PlayerColor.RED
     # TODO: add script here
-    script: List[List[str]] = easy_test_input
+    script: List[List[str]] = EASY_TEST_INPUT
 
     @staticmethod
     def input_wrap(prompt: str) -> str:
