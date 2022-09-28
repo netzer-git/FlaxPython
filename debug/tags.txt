@@ -1,0 +1,17 @@
+(B01) - Game::play_all_cards_in_queue - card added to area after turn finished.
+(B02) - Game::run_turn - conclude and find turn winner.
+(B03) - Game::play_card_in_area - card was played in area.
+(B04) - Game::run_game - reveal new area
+(B05) - Game:roll_new_area - new area was rolled and revealed.
+
+(C01) - Area::activate_special_func - activate area special func
+(C05) - Area::add_card_to_side - card added to side inside area
+
+(D01) - Player::draw_card - draw card
+(D02) - Player::init - finish player creation
+
+(E01) - Player::draw_card - card ability activation - ON_DRAW
+(E02) - Player::init - card ability activation - ON_START
+
+(F01) - Game::roll_new_area - area ability activation - ON_REVEAL
+(F02) -  - area ability activation - ON_GOING
