@@ -34,7 +34,7 @@ So second step is making the game real. Fun. Maybe even a bit different than the
 (By the way, I'm sure not going to make all the cards in the game - there are crazy powers that I have no idea how to
 remake)
 
-### Third Stage: Bot Time
+### Third Stage : Bot Time
 
 And here comes the real deal. The unknown. The part that I'm actually want to learn - how to make a game learn to play
 FlaxPython. Good luck.
