@@ -7,11 +7,14 @@ from specialFunctions import CardFunctions
 from specialFunctions import AreaFunctions
 
 card_factory = {
-    0: card.Card(0, "John Doe", 2, 1, triggerType.CardTriggerType.EMPTY, None, ""),
-    1: card.Card(1, "Marry Doe", 3, 2, triggerType.CardTriggerType.EMPTY, None, ""),
+    0: card.Card(0, "Rock", 0, 1, triggerType.CardTriggerType.EMPTY, None, "Let's Rock"),
+    1: card.Card(1, "Misty Knight", 2, 1, triggerType.CardTriggerType.EMPTY, None, ""),
     2: card.Card(2, "The Flash", 1, 1, triggerType.CardTriggerType.ON_REVEAL,
                  CardFunctions.flash,
-                 CardFunctions.flash.__doc__)
+                 CardFunctions.flash.__doc__),
+    3: card.Card(3, "Korg", 2, 1, triggerType.CardTriggerType.ON_REVEAL,
+                 CardFunctions.korg,
+                 CardFunctions.korg.__doc__)
 }
 
 area_factory = {

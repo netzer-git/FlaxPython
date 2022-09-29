@@ -19,13 +19,13 @@ EASY_TEST_DECK = {
 }
 
 FLASH_TEST_DECK = {
-    "red_deck": [factory.get_card_by_id(0),
-                 factory.get_card_by_id(0),
-                 factory.get_card_by_id(0),
+    "red_deck": [factory.get_card_by_id(1),
                  factory.get_card_by_id(1),
                  factory.get_card_by_id(1),
                  factory.get_card_by_id(2),
-                 factory.get_card_by_id(2)],
+                 factory.get_card_by_id(2),
+                 factory.get_card_by_id(3),
+                 factory.get_card_by_id(3)],
     "blue_deck": [factory.get_card_by_id(0),
                   factory.get_card_by_id(0),
                   factory.get_card_by_id(0),
