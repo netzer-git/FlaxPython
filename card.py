@@ -22,6 +22,9 @@ class Card:
     def get_power(self) -> int:
         return self._power
 
+    def set_power(self, power) -> None:
+        self._power = power
+
     def get_cost(self) -> int:
         return self._cost
 

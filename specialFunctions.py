@@ -1,3 +1,4 @@
+import area
 import factory
 import game
 import player
@@ -7,12 +8,16 @@ import playerColor
 class CardFunctions:
     @staticmethod
     def helper_get_player(get_current: bool) -> player.Player:
-        if game.Game.instance().current_revealing_player == playerColor.PlayerColor.RED:
+        if game.Game.instance().meta["revealing_player_color"] == playerColor.PlayerColor.RED:
             return game.Game.instance().red_player if get_current else game.Game.instance().blue_player
-        elif game.Game.instance().current_revealing_player == playerColor.PlayerColor.BLUE:
+        elif game.Game.instance().meta["revealing_player_color"] == playerColor.PlayerColor.BLUE:
             return game.Game.instance().blue_player if get_current else game.Game.instance().red_player
         else:
             raise RuntimeError("Invalid current revealing player")
+
+    @staticmethod
+    def helper_get_current_played_area() -> area.Area:
+        return game.Game.instance().areas[game.Game.instance().meta["revealing_area"]]
 
     @staticmethod
     def flash() -> bool:
@@ -24,6 +29,15 @@ class CardFunctions:
     def korg() -> bool:
         """On reveal: Shuffle a Rock to opponent deck"""
         CardFunctions.helper_get_player(get_current=False).add_card(factory.get_card_by_name("Rock"), to_hand=False)
+        return True
+
+    @staticmethod
+    def worlfsbane() -> bool:
+        """On reveal: +2 power for each other card you have here"""
+        current_area = CardFunctions.helper_get_current_played_area()
+        side = current_area.get_side(game.Game.instance().meta["revealing_player_color"])
+        current_power = game.Game.instance().meta["revealed_card"].get_power()
+        game.Game.instance().meta["revealed_card"].set_power(current_power + len(side) * 2)
         return True
 
 

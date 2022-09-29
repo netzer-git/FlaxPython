@@ -14,7 +14,10 @@ card_factory = {
                  CardFunctions.flash.__doc__),
     3: card.Card(3, "Korg", 2, 1, triggerType.CardTriggerType.ON_REVEAL,
                  CardFunctions.korg,
-                 CardFunctions.korg.__doc__)
+                 CardFunctions.korg.__doc__),
+    4: card.Card(4, "Wolfsbane", 1, 3, triggerType.CardTriggerType.ON_REVEAL,
+                 CardFunctions.worlfsbane,
+                 CardFunctions.worlfsbane.__doc__)
 }
 
 area_factory = {

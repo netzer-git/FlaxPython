@@ -5,8 +5,10 @@ import playerColor
 import logging
 import triggerType
 
+
 class Area:
-    def __init__(self, area_id: int, name: str, trigger_type: triggerType.AreaTriggerType, special_func: Callable, special_func_str: str):
+    def __init__(self, area_id: int, name: str, trigger_type: triggerType.AreaTriggerType, special_func: Callable,
+                 special_func_str: str):
         self._id: int = area_id
         self._name: str = name
         self._trigger_type: triggerType.AreaTriggerType = trigger_type
@@ -57,10 +59,10 @@ class Area:
                     (self._red_side if player_color == playerColor.PlayerColor.RED else self._blue_side)])
 
     def get_winner(self) -> playerColor.PlayerColor:
-        isRedWinner: bool = self.get_points_from_side(playerColor.PlayerColor.RED) > self.get_points_from_side(playerColor.PlayerColor.BLUE)
+        isRedWinner: bool = self.get_points_from_side(playerColor.PlayerColor.RED) > self.get_points_from_side(
+            playerColor.PlayerColor.BLUE)
         return playerColor.PlayerColor.RED if isRedWinner else playerColor.PlayerColor.BLUE
 
     def add_card_to_side(self, card: card.Card, player_color: playerColor.PlayerColor):
         self._red_side.append(card) if player_color == playerColor.PlayerColor.RED else self._blue_side.append(card)
         logging.debug(f'(C05) card: {card.get_name()} was played in area {self._id} on side {player_color}')
-

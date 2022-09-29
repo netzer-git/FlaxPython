@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 import logging
 
 import card
@@ -19,7 +19,7 @@ ALIGN = 50
 class Game:
     def __init__(self):
         self._turn_num: int = 0
-        self._areas: List[area.Area] = []
+        self.areas: List[area.Area] = []
         self._game_finish: int = 6
 
         self.red_player: player.Player = None
@@ -28,8 +28,11 @@ class Game:
         self._blue_card_queue = []
 
         # used only in revealing stage - creating metadata for cards special function
-        self.current_revealing_player: pc.PlayerColor = None
-        self.current_revealing_area: int = None
+        self.meta: Dict[str, any] = {
+            "revealing_player_color": None,
+            "revealing_area": None,
+            "revealed_card": None,
+        }
 
     def get_current_turn_energy(self) -> int:
         # TODO: change with area changes
@@ -44,28 +47,28 @@ class Game:
 
     def get_current_winner(self) -> pc.PlayerColor:
         red_win_sum: int = 0
-        for a in self._areas:
+        for a in self.areas:
             if a.get_winner() == pc.PlayerColor.RED:
                 red_win_sum += 1
         # TODO: currently, BLUE is winning on a draw in an area
-        return pc.PlayerColor.RED if red_win_sum >= len(self._areas) / 2 else pc.PlayerColor.BLUE
+        return pc.PlayerColor.RED if red_win_sum >= len(self.areas) / 2 else pc.PlayerColor.BLUE
 
     def roll_new_area(self, area_index: int) -> None:
         # save areas
-        red_side = self._areas[area_index].get_side(pc.PlayerColor.RED)
-        blue_side = self._areas[area_index].get_side(pc.PlayerColor.BLUE)
+        red_side = self.areas[area_index].get_side(pc.PlayerColor.RED)
+        blue_side = self.areas[area_index].get_side(pc.PlayerColor.BLUE)
         # roll new area
-        self._areas[area_index] = factory.get_random_area()
+        self.areas[area_index] = factory.get_random_area()
         # refill areas
-        self._areas[area_index].set_side(pc.PlayerColor.RED, red_side)
-        self._areas[area_index].set_side(pc.PlayerColor.BLUE, blue_side)
+        self.areas[area_index].set_side(pc.PlayerColor.RED, red_side)
+        self.areas[area_index].set_side(pc.PlayerColor.BLUE, blue_side)
         # reveal area
-        if self._areas[area_index].get_trigger_type() == triggerType.AreaTriggerType.ON_REVEAL:
-            self._areas[area_index].activate_special_func()
+        if self.areas[area_index].get_trigger_type() == triggerType.AreaTriggerType.ON_REVEAL:
+            self.areas[area_index].activate_special_func()
             logging.debug(
-                f'(F01) area: {self._areas[area_index].get_id()} activated ON_REVEAL: {self._areas[area_index].get_special_func_str()}')
+                f'(F01) area: {self.areas[area_index].get_id()} activated ON_REVEAL: {self.areas[area_index].get_special_func_str()}')
         logging.debug(
-            f'(B05) area (index {area_index} id {self._areas[area_index].get_id()}) was rolled, filled and revealed')
+            f'(B05) area (index {area_index} id {self.areas[area_index].get_id()}) was rolled, filled and revealed')
 
     def play_card_in_area(self, card: card.Card, area_index: int, player_color: pc.PlayerColor) -> None:
         if player_color == pc.PlayerColor.RED:
@@ -77,23 +80,25 @@ class Game:
 
     def play_all_cards_in_queue(self, player_color: pc.PlayerColor):
         player_queue = self._red_card_queue if player_color == pc.PlayerColor.RED else self._blue_card_queue
-        self.current_revealing_player = player_color  # card metadata
+        self.meta["revealing_player_color"] = player_color  # card metadata
         for c in player_queue:
-            self._areas[c[1] - 1].add_card_to_side(c[0], player_color)
-            logging.debug(f'(B01) card: {c[0].get_id()} was added to area {c[1]} for player {player_color}')
+            self.meta["revealed_card"] = c[0]
             if c[0].get_trigger_type() == triggerType.CardTriggerType.ON_REVEAL:
-                self.current_revealing_area = c[1] - 1  # card metadata
+                self.meta["revealing_area"] = c[1] - 1  # card metadata
                 c[0].activate_special_func()
                 logging.debug(f'(E02) card: {c[0].get_id()} activated ON_REVEAL: {c[0].get_special_func_str()}')
-                self.current_revealing_area = None  # clear card metadata
-        self.current_revealing_player = None  # clear card metadata
+                self.meta["revealing_area"] = None  # clear card metadata
+            self.areas[c[1] - 1].add_card_to_side(c[0], player_color)
+            logging.debug(f'(B01) card: {c[0].get_id()} was added to area {c[1]} for player {player_color}')
+            self.meta["revealed_card"] = None
+        self.meta["revealing_player_color"] = None  # clear card metadata
 
     def init_game(self, red_deck: List[card.Card], blue_deck: List[card.Card], areas: List[area.Area] = None):
         logging.info('init game')
         logging.debug('init areas to empty areas')
-        self._areas = areas if areas else [factory.get_area_by_id(0),
-                                           factory.get_area_by_id(0),
-                                           factory.get_area_by_id(0)]
+        self.areas = areas if areas else [factory.get_area_by_id(0),
+                                          factory.get_area_by_id(0),
+                                          factory.get_area_by_id(0)]
         logging.debug('init players')
         self.red_player = player.Player(red_deck, pc.PlayerColor.RED)
         logging.debug(f'red player: {self.red_player}')
@@ -150,14 +155,14 @@ class Game:
             if self._turn_num > self._game_finish:
                 logging.debug(f'Got to the furn after the last turn: {self._turn_num}')
                 return
-            elif self._turn_num <= 3 and self._areas[self._turn_num - 1].get_id() == 0:
+            elif self._turn_num <= 3 and self.areas[self._turn_num - 1].get_id() == 0:
                 self.roll_new_area(self._turn_num - 1)
-                logging.debug(f'(B04) reveal area: {self._areas[self._turn_num - 1].get_name()}')
+                logging.debug(f'(B04) reveal area: {self.areas[self._turn_num - 1].get_name()}')
             self.run_turn()
 
     def format_areas(self) -> str:
         area_str_lst = []
-        for a in self._areas:
+        for a in self.areas:
             red_side_str = a.get_side_as_str(pc.PlayerColor.RED)
             blue_side_str = a.get_side_as_str(pc.PlayerColor.BLUE)
             max_a_row: int = max(len(a.get_name()),
