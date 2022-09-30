@@ -40,6 +40,17 @@ class CardFunctions:
         game.Game.instance().meta["revealed_card"].set_power(current_power + len(side) * 2)
         return True
 
+    @staticmethod
+    def medusa() -> bool:
+        """On reveal: +2 power if played in the middle area"""
+        middle_area_index = 1
+        if game.Game.instance().meta["revealing_area"] == middle_area_index:
+            current_power = game.Game.instance().meta["revealed_card"].get_power()
+            game.Game.instance().meta["revealed_card"].set_power(current_power + 2)
+            return True
+        else:
+            return False
+
 
 class AreaFunctions:
 

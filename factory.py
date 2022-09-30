@@ -17,7 +17,10 @@ card_factory = {
                  CardFunctions.korg.__doc__),
     4: card.Card(4, "Wolfsbane", 1, 3, triggerType.CardTriggerType.ON_REVEAL,
                  CardFunctions.worlfsbane,
-                 CardFunctions.worlfsbane.__doc__)
+                 CardFunctions.worlfsbane.__doc__),
+    5: card.Card(5, "Medusa", 2, 2, triggerType.CardTriggerType.ON_REVEAL,
+                 CardFunctions.medusa,
+                 CardFunctions.medusa.__doc__)
 }
 
 area_factory = {
