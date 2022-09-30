@@ -9,10 +9,12 @@
 
 (D01) - Player::draw_card - draw card
 (D02) - Player::init - finish player creation
+(D03) - Player::discard_card - discard card from the player hand
 
 (E01) - Player::draw_card - card ability activation - ON_DRAW
 (E02) - Player::init - card ability activation - ON_START
 (E03) - Game::play_all_cards_in_queue - card ability activation - ON_REVEAL
+(E04) - Game::discard_card - card ability activation - ON_DISCARD
 
 (F01) - Game::roll_new_area - area ability activation - ON_REVEAL
 (F02) -  - area ability activation - ON_GOING

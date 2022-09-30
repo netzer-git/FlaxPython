@@ -40,6 +40,25 @@ class Player:
     def get_player_color(self) -> playerColor.PlayerColor:
         return self._color
 
+    def discard_card(self, discard_func=None) -> None:
+        """
+        Discard one card from the hand.
+        discard_func is a function that takes List[Card] (the player's hand) and returns the index of the card that
+        will be discarded.
+        """
+        card_index_to_discard: int = None
+        if discard_func:
+            card_index_to_discard = discard_func(self._hand)
+        else:
+            card_index_to_discard = self._hand[rnd.randint(0, len(self._hand))].get_id()
+        card_to_discard = self._hand[card_index_to_discard]
+        self._hand.pop(card_index_to_discard)
+        logging.debug(f'(D03) card {card_to_discard.get_id()} was discarded from {self._color} player hand')
+        if card_to_discard.get_trigger_type() == triggerType.CardTriggerType.ON_DISCARD:
+            card_to_discard.activate_special_func()
+            logging.debug(
+                f'(E04) card: {card_to_discard.get_id()} activated ON_DISCARD: {card_to_discard.get_special_func_str()}')
+
     def draw_card(self) -> None:
         new_card = self._deck.pop() if self._deck else None
         if new_card:
@@ -50,6 +69,13 @@ class Player:
             logging.debug(f'(D01) {self._color} drew {new_card.get_id()}')
         else:
             logging.debug(f'(D01) {self._color} tried to draw but the deck is empty')
+
+    def add_card(self, card: card.Card, to_hand: bool) -> None:
+        if to_hand:
+            self._hand.append(card)
+        else:
+            self._deck.append(card)
+            rnd.shuffle(self._deck)
 
     def do_turn(self) -> None:
         # begin
@@ -110,13 +136,6 @@ class Player:
         card_to_play: card.Card = self._hand.pop(card_index)
         self._energy = self._energy - card_to_play.get_cost()
         game.Game.instance().play_card_in_area(card_to_play, area_index, self._color)
-
-    def add_card(self, card: card.Card, to_hand: bool) -> None:
-        if to_hand:
-            self._hand.append(card)
-        else:
-            self._deck.append(card)
-            rnd.shuffle(self._deck)
 
     def format_hand(self) -> str:
         if not self._hand:
