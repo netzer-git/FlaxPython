@@ -2,6 +2,7 @@ import factory
 import game
 import logging
 import colorama
+import inputWrapper
 
 DEBUG_MODE = True
 
@@ -47,7 +48,8 @@ def main():
 
     # auto reset all color after each print (once per print)
     colorama.init(autoreset=True)
-
+    # input config
+    inputWrapper.InputWrapper.init_input_mode("cli")
     # deck init
     decks = FLASH_TEST_DECK
     # area init

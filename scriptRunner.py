@@ -1,9 +1,8 @@
-import logging
-from typing import List
-import colorama
-import playerColor
 import factory
 import game
+import logging
+import colorama
+import inputWrapper
 
 DEBUG_MODE = True
 SCRIPT_RUNNER_MODE = False
@@ -36,34 +35,21 @@ EASY_TEST_DECK = {
                   factory.get_card_by_id(1)]
 }
 
+MEDUSA_TEST_INPUT = [
+    ["red1", "n"],
+    ["blue1", "n"],
+    ["red2", "y", "5", "2", "n"],
+    ["blue2", "y", "5", "3", "n"],
+]
 
-class ScriptedRunner:
-    turn: int = 0
-    inside_turn: int = 0
-    turn_logger: playerColor.PlayerColor = playerColor.PlayerColor.RED
-    # TODO: add script here
-    script: List[List[str]] = None
-
-    @staticmethod
-    def init_script(script):
-        ScriptedRunner.script = script
-
-    @staticmethod
-    def input_wrap(prompt: str) -> str:
-        # scripted input - test purposes
-        if SCRIPT_RUNNER_MODE:
-            scripted_input = ScriptedRunner.script[ScriptedRunner.turn][ScriptedRunner.inside_turn]
-            ScriptedRunner.inside_turn += 1
-            # end of turn
-            if ScriptedRunner.inside_turn == len(ScriptedRunner.script[ScriptedRunner.turn]):
-                ScriptedRunner.turn += 1
-                ScriptedRunner.inside_turn = 0
-            if scripted_input == 'n':
-                ScriptedRunner.turn_logger = playerColor.PlayerColor.RED if ScriptedRunner.turn_logger == playerColor.PlayerColor.BLUE else playerColor.PlayerColor.BLUE
-            return scripted_input
-        # regular input
-        else:
-            return input(prompt)
+MEDUSA_DECK = {
+    "red_deck": [factory.get_card_by_id(0),
+                 factory.get_card_by_id(1),
+                 factory.get_card_by_id(5)],
+    "blue_deck": [factory.get_card_by_id(0),
+                  factory.get_card_by_id(0),
+                  factory.get_card_by_id(5)]
+}
 
 
 def main_wrapper(script_name):
@@ -77,10 +63,13 @@ def main_wrapper(script_name):
     logging.info('Running scripted game')
     logging.info(f'script_name: {script_name}')
 
-    ScriptedRunner.init_script(EASY_TEST_INPUT)
+    inputWrapper.InputWrapper.init_input_mode("scripted")
+    # TODO: update on use
+    inputWrapper.InputWrapper.init_script(MEDUSA_TEST_INPUT)
 
     areas = []
-    decks = EASY_TEST_DECK
+    # TODO: update on use
+    decks = MEDUSA_DECK
 
     # auto reset all color after each print (once per print)
     colorama.init(autoreset=True)
