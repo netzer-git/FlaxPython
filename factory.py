@@ -43,7 +43,6 @@ def get_card_by_id(card_id: int) -> card.Card:
 
 
 def get_random_card() -> card.Card:
-    # FIXME: returns the same object - shallow copy
     return copy.deepcopy(card_factory[rnd.randint(1, len(card_factory) - 1)])
 
 
@@ -61,5 +60,4 @@ def get_area_by_id(area_id: int) -> area.Area:
 
 
 def get_random_area() -> area.Area:
-    # FIXME: returns the same object - shallow copy
     return copy.deepcopy(area_factory[rnd.randint(1, len(area_factory) - 1)])
