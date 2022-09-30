@@ -1,15 +1,12 @@
 import logging
 from typing import List
-
 import colorama
-
 import playerColor
 import factory
 import game
 
 DEBUG_MODE = True
 SCRIPT_RUNNER_MODE = False
-AUTOMATIC_RUNNER_MODE = False
 
 EASY_TEST_INPUT = [
     ["red1", "y", "0", "1", "n"],
@@ -26,30 +23,44 @@ EASY_TEST_INPUT = [
     ["blue6", "n"]
 ]
 
+EASY_TEST_DECK = {
+    "red_deck": [factory.get_card_by_id(0),
+                 factory.get_card_by_id(0),
+                 factory.get_card_by_id(0),
+                 factory.get_card_by_id(1),
+                 factory.get_card_by_id(1)],
+    "blue_deck": [factory.get_card_by_id(0),
+                  factory.get_card_by_id(0),
+                  factory.get_card_by_id(0),
+                  factory.get_card_by_id(1),
+                  factory.get_card_by_id(1)]
+}
 
-class AutomaticRunner:
+
+class ScriptedRunner:
     turn: int = 0
     inside_turn: int = 0
     turn_logger: playerColor.PlayerColor = playerColor.PlayerColor.RED
     # TODO: add script here
-    script: List[List[str]] = EASY_TEST_INPUT
+    script: List[List[str]] = None
+
+    @staticmethod
+    def init_script(script):
+        ScriptedRunner.script = script
 
     @staticmethod
     def input_wrap(prompt: str) -> str:
         # scripted input - test purposes
         if SCRIPT_RUNNER_MODE:
-            scripted_input = AutomaticRunner.script[AutomaticRunner.turn][AutomaticRunner.inside_turn]
-            AutomaticRunner.inside_turn += 1
+            scripted_input = ScriptedRunner.script[ScriptedRunner.turn][ScriptedRunner.inside_turn]
+            ScriptedRunner.inside_turn += 1
             # end of turn
-            if AutomaticRunner.inside_turn == len(AutomaticRunner.script[AutomaticRunner.turn]):
-                AutomaticRunner.turn += 1
-                AutomaticRunner.inside_turn = 0
+            if ScriptedRunner.inside_turn == len(ScriptedRunner.script[ScriptedRunner.turn]):
+                ScriptedRunner.turn += 1
+                ScriptedRunner.inside_turn = 0
             if scripted_input == 'n':
-                AutomaticRunner.turn_logger = playerColor.PlayerColor.RED if AutomaticRunner.turn_logger == playerColor.PlayerColor.BLUE else playerColor.PlayerColor.BLUE
+                ScriptedRunner.turn_logger = playerColor.PlayerColor.RED if ScriptedRunner.turn_logger == playerColor.PlayerColor.BLUE else playerColor.PlayerColor.BLUE
             return scripted_input
-        # automatic input - bot training
-        elif AUTOMATIC_RUNNER_MODE:
-            raise RuntimeError("No Automatic Runner detected")
         # regular input
         else:
             return input(prompt)
@@ -66,8 +77,10 @@ def main_wrapper(script_name):
     logging.info('Running scripted game')
     logging.info(f'script_name: {script_name}')
 
+    ScriptedRunner.init_script(EASY_TEST_INPUT)
+
     areas = []
-    decks = {}
+    decks = EASY_TEST_DECK
 
     # auto reset all color after each print (once per print)
     colorama.init(autoreset=True)

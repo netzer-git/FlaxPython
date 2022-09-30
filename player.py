@@ -9,7 +9,7 @@ import card
 import game
 import playerColor
 import triggerType
-from automaticRunner import AutomaticRunner
+from scriptRunner import ScriptedRunner
 
 STARTING_HAND_SIZE = 3
 STAR = "*** *** ***"
@@ -87,15 +87,15 @@ class Player:
         # show hand
         print(self.format_hand())
         # play cards
-        want_to_play_card: str = AutomaticRunner.input_wrap("Do you want to play a card? (y/n): ")
+        want_to_play_card: str = ScriptedRunner.input_wrap("Do you want to play a card? (y/n): ")
         while True:
             if want_to_play_card in ["N", "n"]:
                 break
             elif want_to_play_card in ["Y", "y"]:
                 self.play_card()
-                want_to_play_card: str = AutomaticRunner.input_wrap("Do you want to play another card? (y/n): ")
+                want_to_play_card: str = ScriptedRunner.input_wrap("Do you want to play another card? (y/n): ")
             else:
-                want_to_play_card: str = AutomaticRunner.input_wrap(
+                want_to_play_card: str = ScriptedRunner.input_wrap(
                     "Invalid input. Do you want to play another card? (y/n): ")
             # TODO do we need to print hand again?
 
@@ -104,7 +104,7 @@ class Player:
         self-sufficient function: handles all the input, and hand handling.
         """
         # get card input
-        card_name_or_id = AutomaticRunner.input_wrap("Enter either Card Name or ID (Q to quit): ")
+        card_name_or_id = ScriptedRunner.input_wrap("Enter either Card Name or ID (Q to quit): ")
         while True:
             card_index = -1
             for i in range(len(self._hand)):
@@ -119,19 +119,19 @@ class Player:
                 break
             # failed energy check
             elif card_index != -1 and self._hand[card_index].get_cost() > self._energy:
-                card_name_or_id = AutomaticRunner.input_wrap("You don't have enough energy to play this card: ")
+                card_name_or_id = ScriptedRunner.input_wrap("You don't have enough energy to play this card: ")
             # wrong input
             else:
-                card_name_or_id = AutomaticRunner.input_wrap(
+                card_name_or_id = ScriptedRunner.input_wrap(
                     "Card Name or ID are not matching any cards in hand: ")
         # get area input:
-        area_index: int = int(AutomaticRunner.input_wrap("Enter Area index: "))
+        area_index: int = int(ScriptedRunner.input_wrap("Enter Area index: "))
         while True:
             if area_index in [1, 2, 3] and game.Game.instance().is_card_playable_in_area(self._hand[card_index],
                                                                                          area_index):
                 break
             else:
-                area_index = int(AutomaticRunner.input_wrap("Invalid Area number, please enter 1, 2, 3: "))
+                area_index = int(ScriptedRunner.input_wrap("Invalid Area number, please enter 1, 2, 3: "))
 
         card_to_play: card.Card = self._hand.pop(card_index)
         self._energy = self._energy - card_to_play.get_cost()
