@@ -167,7 +167,7 @@ class Game:
         # run game
         self.main_game()
         # finish game
-        self.instance().end_game()
+        self.end_game()
 
     def format_areas(self) -> str:
         area_str_lst = []
