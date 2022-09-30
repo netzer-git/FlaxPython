@@ -1,8 +1,13 @@
+import logging
 from typing import List
+
+import colorama
 
 import playerColor
 import factory
+import game
 
+DEBUG_MODE = True
 SCRIPT_RUNNER_MODE = False
 AUTOMATIC_RUNNER_MODE = False
 
@@ -48,3 +53,27 @@ class AutomaticRunner:
         # regular input
         else:
             return input(prompt)
+
+
+def main_wrapper(script_name):
+    # logging mode
+    if DEBUG_MODE:
+        logging.basicConfig(filename='debug/scripted-debug-game.log', filemode='w', level=logging.DEBUG)
+    else:
+        logging.basicConfig(filename='debug/scripted-info-game.log', filemode='w', level=logging.INFO)
+
+    logging.info('logging init')
+    logging.info('Running scripted game')
+    logging.info(f'script_name: {script_name}')
+
+    areas = []
+    decks = {}
+
+    # auto reset all color after each print (once per print)
+    colorama.init(autoreset=True)
+    # run game
+    game.Game.instance().run(decks["red_deck"], decks["blue_deck"], areas)
+
+
+if __name__ == '__main__':
+    main_wrapper("easy_script")

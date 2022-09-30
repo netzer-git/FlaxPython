@@ -145,7 +145,7 @@ class Game:
         self._red_card_queue = []
         self._blue_card_queue = []
 
-    def run_game(self) -> None:
+    def main_game(self) -> None:
         """
         run the whole turns of the game, have to be after init_game
         """
@@ -159,6 +159,15 @@ class Game:
                 self.roll_new_area(self._turn_num - 1)
                 logging.debug(f'(B04) reveal area: {self.areas[self._turn_num - 1].get_name()}')
             self.run_turn()
+
+    def run(self, red_deck: List[card.Card], blue_deck: List[card.Card], areas: List[area.Area]) -> None:
+        """Main game running function"""
+        # init game
+        self.init_game(red_deck, blue_deck, areas)
+        # run game
+        self.main_game()
+        # finish game
+        self.instance().end_game()
 
     def format_areas(self) -> str:
         area_str_lst = []

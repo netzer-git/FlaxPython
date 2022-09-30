@@ -52,12 +52,8 @@ def main():
     decks = FLASH_TEST_DECK
     # area init
     areas = []
-    # init game
-    game.Game.instance().init_game(decks["red_deck"], decks["blue_deck"], areas)
     # run game
-    game.Game.instance().run_game()
-    # finish game
-    game.Game.instance().end_game()
+    game.Game.instance().run(decks["red_deck"], decks["blue_deck"], areas)
     input()
 
 
