@@ -47,12 +47,21 @@ class Game:
         return True
 
     def get_current_winner(self) -> pc.PlayerColor:
-        red_win_sum: int = 0
+        red_sum: int = 0
+        red_wins: int = 0
+        blue_sum: int = 0
+        blue_wins: int = 0
         for a in self.areas:
-            if a.get_winner() == pc.PlayerColor.RED:
-                red_win_sum += 1
-        # FIXME: currently, BLUE is winning on a draw in an area
-        return pc.PlayerColor.RED if red_win_sum >= len(self.areas) / 2 else pc.PlayerColor.BLUE
+            if a.get_scoreboard() > 0:
+                red_wins += 1
+                red_sum += a.get_scoreboard()
+            elif a.get_scoreboard() < 0:
+                blue_wins += 1
+                blue_sum += -a.get_scoreboard()
+        if red_wins > blue_wins or (red_wins == blue_wins and red_sum > blue_sum):
+            return pc.PlayerColor.RED
+        else:
+            return pc.PlayerColor.BLUE
 
     def roll_new_area(self, area_index: int) -> None:
         # save areas
@@ -123,7 +132,7 @@ class Game:
         return winner
 
     def run_turn(self) -> None:
-        logging.debug(f'priwnt areas')
+        logging.debug(f'print areas')
         print(self.format_areas())
 
         logging.info(f'start turn {self._turn_num}')

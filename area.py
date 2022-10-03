@@ -58,10 +58,12 @@ class Area:
         return sum([c.get_power() for c in
                     (self._red_side if player_color == playerColor.PlayerColor.RED else self._blue_side)])
 
-    def get_winner(self) -> playerColor.PlayerColor:
-        isRedWinner: bool = self.get_points_from_side(playerColor.PlayerColor.RED) > self.get_points_from_side(
+    def get_scoreboard(self) -> int:
+        """
+        returns the difference between the red and blue points. returning +n on red win and -n on blue win. 0 on draw.
+        """
+        return self.get_points_from_side(playerColor.PlayerColor.RED) - self.get_points_from_side(
             playerColor.PlayerColor.BLUE)
-        return playerColor.PlayerColor.RED if isRedWinner else playerColor.PlayerColor.BLUE
 
     def add_card_to_side(self, card: card.Card, player_color: playerColor.PlayerColor):
         self._red_side.append(card) if player_color == playerColor.PlayerColor.RED else self._blue_side.append(card)
