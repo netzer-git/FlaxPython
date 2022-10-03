@@ -4,7 +4,7 @@ import triggerType
 
 
 class Card:
-    def __init__(self, card_id, name, power, cost, trigger_type, special_func, special_func_str):
+    def __init__(self, card_id, name, cost, power, trigger_type, special_func, special_func_str):
         self._id: int = card_id
         self._name: str = name
         self._power: int = power

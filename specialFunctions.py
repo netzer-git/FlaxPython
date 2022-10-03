@@ -51,6 +51,27 @@ class CardFunctions:
         else:
             return False
 
+    @staticmethod
+    def blade() -> bool:
+        """On reveal: Discard a card"""
+        CardFunctions.helper_get_player(True).discard_card(discard_func=None)
+        return True
+
+    @staticmethod
+    def hellcow() -> bool:
+        """On reveal: Discard 2 cards"""
+        CardFunctions.helper_get_player(True).discard_card(discard_func=None)
+        CardFunctions.helper_get_player(True).discard_card(discard_func=None)
+        return True
+
+    @staticmethod
+    def apocalypse() -> bool:
+        """On discard: Put it back in hand with +4 power"""
+        apocalypse = game.Game.instance().meta["discarded_card"]
+        apocalypse.set_power(apocalypse.get_power() + 4)
+        CardFunctions.helper_get_player(True).add_card(apocalypse, True)
+        return True
+
 
 class AreaFunctions:
 

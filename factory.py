@@ -7,20 +7,30 @@ from specialFunctions import CardFunctions
 from specialFunctions import AreaFunctions
 
 card_factory = {
-    0: card.Card(0, "Rock", 0, 1, triggerType.CardTriggerType.EMPTY, None, "Let's Rock"),
-    1: card.Card(1, "Misty Knight", 2, 1, triggerType.CardTriggerType.EMPTY, None, ""),
+    0: card.Card(0, "Rock", 1, 0, triggerType.CardTriggerType.EMPTY, None, "Let's Rock"),
+    1: card.Card(1, "Misty Knight", 1, 2, triggerType.CardTriggerType.EMPTY, None, ""),
     2: card.Card(2, "The Flash", 1, 1, triggerType.CardTriggerType.ON_REVEAL,
                  CardFunctions.flash,
                  CardFunctions.flash.__doc__),
-    3: card.Card(3, "Korg", 2, 1, triggerType.CardTriggerType.ON_REVEAL,
+    3: card.Card(3, "Korg", 1, 2, triggerType.CardTriggerType.ON_REVEAL,
                  CardFunctions.korg,
                  CardFunctions.korg.__doc__),
-    4: card.Card(4, "Wolfsbane", 1, 3, triggerType.CardTriggerType.ON_REVEAL,
+    4: card.Card(4, "Wolfsbane", 3, 1, triggerType.CardTriggerType.ON_REVEAL,
                  CardFunctions.worlfsbane,
                  CardFunctions.worlfsbane.__doc__),
     5: card.Card(5, "Medusa", 2, 2, triggerType.CardTriggerType.ON_REVEAL,
                  CardFunctions.medusa,
-                 CardFunctions.medusa.__doc__)
+                 CardFunctions.medusa.__doc__),
+    6: card.Card(6, "Blade", 1, 3, triggerType.CardTriggerType.ON_REVEAL,
+                 CardFunctions.blade,
+                 CardFunctions.blade.__doc__),
+    7: card.Card(7, "Apocalypse", 6, 8, triggerType.CardTriggerType.ON_DISCARD,
+                 CardFunctions.apocalypse,
+                 CardFunctions.apocalypse.__doc__),
+    8: card.Card(8, "HellCow", 4, 6, triggerType.CardTriggerType.ON_REVEAL,
+                 CardFunctions.hellcow,
+                 CardFunctions.hellcow.__doc__)
+
 }
 
 area_factory = {

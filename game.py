@@ -32,6 +32,7 @@ class Game:
             "revealing_player_color": None,
             "revealing_area": None,
             "revealed_card": None,
+            "discarded_card": None
         }
 
     def get_current_turn_energy(self) -> int:
@@ -50,7 +51,7 @@ class Game:
         for a in self.areas:
             if a.get_winner() == pc.PlayerColor.RED:
                 red_win_sum += 1
-        # TODO: currently, BLUE is winning on a draw in an area
+        # FIXME: currently, BLUE is winning on a draw in an area
         return pc.PlayerColor.RED if red_win_sum >= len(self.areas) / 2 else pc.PlayerColor.BLUE
 
     def roll_new_area(self, area_index: int) -> None:

@@ -51,6 +51,32 @@ MEDUSA_DECK = {
                   factory.get_card_by_id(5)]
 }
 
+DISCARD_TEST_INPUT = [
+    ["red1", "y", "6", "1", "n"],
+    ["blue1", "n"],
+    ["red2", "n"],
+    ["blue2", "y", "1", "3", "n"],
+    ["red3", "n"],
+    ["blue3", "n"],
+    ["red4", "y", "7", "2", "n"],
+    ["blue4", "n"],
+    ["red5", "n"],
+    ["blue5", "n"],
+    ["red6", "y", "8", "3", "n"],
+    ["blue6", "n"]
+]
+
+DISCARD_DECK = {
+    "red_deck": [factory.get_card_by_id(6),
+                 factory.get_card_by_id(7),
+                 factory.get_card_by_id(8),
+                 factory.get_card_by_id(1)],
+    "blue_deck": [factory.get_card_by_id(0),
+                  factory.get_card_by_id(1),
+                  factory.get_card_by_id(1),
+                  factory.get_card_by_id(1)]
+}
+
 
 def main_wrapper(script_name):
     # logging mode
@@ -65,11 +91,11 @@ def main_wrapper(script_name):
 
     inputWrapper.InputWrapper.init_input_mode("scripted")
     # TODO: update on use
-    inputWrapper.InputWrapper.init_script(MEDUSA_TEST_INPUT)
+    inputWrapper.InputWrapper.init_script(DISCARD_TEST_INPUT)
 
     areas = []
     # TODO: update on use
-    decks = MEDUSA_DECK
+    decks = DISCARD_DECK
 
     # auto reset all color after each print (once per print)
     colorama.init(autoreset=True)

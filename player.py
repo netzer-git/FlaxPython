@@ -47,17 +47,22 @@ class Player:
         will be discarded.
         """
         card_index_to_discard: int = None
-        if discard_func:
+        if self._hand is None:
+            return
+        elif discard_func:
             card_index_to_discard = discard_func(self._hand)
+            card_to_discard: card.Card = self._hand[card_index_to_discard]
         else:
-            card_index_to_discard = self._hand[rnd.randint(0, len(self._hand))].get_id()
-        card_to_discard = self._hand[card_index_to_discard]
+            card_index_to_discard = rnd.randint(0, len(self._hand) - 1)
+            card_to_discard: card.Card = self._hand[card_index_to_discard]
+        game.Game.instance().meta["discarded_card"] = card_to_discard  # card meta
         self._hand.pop(card_index_to_discard)
         logging.debug(f'(D03) card {card_to_discard.get_id()} was discarded from {self._color} player hand')
         if card_to_discard.get_trigger_type() == triggerType.CardTriggerType.ON_DISCARD:
             card_to_discard.activate_special_func()
             logging.debug(
                 f'(E04) card: {card_to_discard.get_id()} activated ON_DISCARD: {card_to_discard.get_special_func_str()}')
+        game.Game.instance().meta["discarded_card"] = None  # card meta
 
     def draw_card(self) -> None:
         new_card = self._deck.pop() if self._deck else None
