@@ -8,16 +8,16 @@ import playerColor
 class CardFunctions:
     @staticmethod
     def helper_get_player(get_current: bool) -> player.Player:
-        if game.Game.instance().meta["revealing_player_color"] == playerColor.PlayerColor.RED:
+        if game.Game.instance().meta.get_revealing_player_color() == playerColor.PlayerColor.RED:
             return game.Game.instance().red_player if get_current else game.Game.instance().blue_player
-        elif game.Game.instance().meta["revealing_player_color"] == playerColor.PlayerColor.BLUE:
+        elif game.Game.instance().meta.get_revealing_player_color() == playerColor.PlayerColor.BLUE:
             return game.Game.instance().blue_player if get_current else game.Game.instance().red_player
         else:
             raise RuntimeError("Invalid current revealing player")
 
     @staticmethod
     def helper_get_current_played_area() -> area.Area:
-        return game.Game.instance().areas[game.Game.instance().meta["revealing_area"]]
+        return game.Game.instance().areas[game.Game.instance().meta.get_revealing_area_index()]
 
     @staticmethod
     def flash() -> bool:
@@ -35,18 +35,18 @@ class CardFunctions:
     def worlfsbane() -> bool:
         """On reveal: +2 power for each other card you have here"""
         current_area = CardFunctions.helper_get_current_played_area()
-        side = current_area.get_side(game.Game.instance().meta["revealing_player_color"])
-        current_power = game.Game.instance().meta["revealed_card"].get_power()
-        game.Game.instance().meta["revealed_card"].set_power(current_power + len(side) * 2)
+        side = current_area.get_side(game.Game.instance().meta.get_revealing_player_color())
+        current_power = game.Game.instance().meta.get_revealed_card().get_power()
+        game.Game.instance().meta.get_revealed_card().set_power(current_power + len(side) * 2)
         return True
 
     @staticmethod
     def medusa() -> bool:
         """On reveal: +2 power if played in the middle area"""
         middle_area_index = 1
-        if game.Game.instance().meta["revealing_area"] == middle_area_index:
-            current_power = game.Game.instance().meta["revealed_card"].get_power()
-            game.Game.instance().meta["revealed_card"].set_power(current_power + 2)
+        if game.Game.instance().meta.get_revealing_area_index() == middle_area_index:
+            current_power = game.Game.instance().meta.get_revealed_card().get_power()
+            game.Game.instance().meta.get_revealed_card().set_power(current_power + 2)
             return True
         else:
             return False
@@ -67,7 +67,7 @@ class CardFunctions:
     @staticmethod
     def apocalypse() -> bool:
         """On discard: Put it back in hand with +4 power"""
-        apocalypse = game.Game.instance().meta["discarded_card"]
+        apocalypse = game.Game.instance().meta.get_discarded_card()
         apocalypse.set_power(apocalypse.get_power() + 4)
         CardFunctions.helper_get_player(True).add_card(apocalypse, True)
         return True

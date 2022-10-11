@@ -1,8 +1,10 @@
+import time
 from typing import List, Dict
 import logging
 
 import card
 import area
+import metadata
 import player
 import playerColor as pc
 import factory
@@ -28,12 +30,7 @@ class Game:
         self._blue_card_queue = []
 
         # used only in revealing stage - creating metadata for cards special function
-        self.meta: Dict[str, any] = {
-            "revealing_player_color": None,
-            "revealing_area": None,
-            "revealed_card": None,
-            "discarded_card": None
-        }
+        self.meta: metadata.MetaData = metadata.MetaData()
 
     def get_current_turn_energy(self) -> int:
         # TODO: change with area changes
@@ -60,6 +57,7 @@ class Game:
                 blue_sum += -a.get_scoreboard()
         if red_wins > blue_wins or (red_wins == blue_wins and red_sum > blue_sum):
             return pc.PlayerColor.RED
+        # FIXME: currently on full draw - blue is winning
         else:
             return pc.PlayerColor.BLUE
 
@@ -90,18 +88,18 @@ class Game:
 
     def play_all_cards_in_queue(self, player_color: pc.PlayerColor):
         player_queue = self._red_card_queue if player_color == pc.PlayerColor.RED else self._blue_card_queue
-        self.meta["revealing_player_color"] = player_color  # card metadata
+        self.meta.set_revealing_player_color(player_color)
         for c in player_queue:
-            self.meta["revealed_card"] = c[0]
+            self.meta.set_revealed_card(c[0])
             if c[0].get_trigger_type() == triggerType.CardTriggerType.ON_REVEAL:
-                self.meta["revealing_area"] = c[1] - 1  # card metadata
+                self.meta.set_revealing_area_index(c[1] - 1)
                 c[0].activate_special_func()
                 logging.debug(f'(E02) card: {c[0].get_id()} activated ON_REVEAL: {c[0].get_special_func_str()}')
-                self.meta["revealing_area"] = None  # clear card metadata
+                self.meta.set_revealing_area_index()
             self.areas[c[1] - 1].add_card_to_side(c[0], player_color)
             logging.debug(f'(B01) card: {c[0].get_id()} was added to area {c[1]} for player {player_color}')
-            self.meta["revealed_card"] = None
-        self.meta["revealing_player_color"] = None  # clear card metadata
+            self.meta.set_revealed_card()
+        self.meta.set_revealing_player_color()
 
     def init_game(self, red_deck: List[card.Card], blue_deck: List[card.Card], areas: List[area.Area] = None):
         logging.info('init game')
@@ -134,6 +132,7 @@ class Game:
     def run_turn(self) -> None:
         logging.debug(f'print areas')
         print(self.format_areas())
+        time.sleep(3)
 
         logging.info(f'start turn {self._turn_num}')
         print(DASH)
